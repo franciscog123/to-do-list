@@ -1,8 +1,67 @@
+body,html
+{
+    font-family: 'Proza Libre', sans-serif, Arial, Helvetica, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding:0;
+    height: 100%;
+}
+
 h1,h2,h3,h4,h5
 {
     font-family: 'Cormorant Garamond', serif, Arial, Helvetica, sans-serif;
 }
-body
+
+.page
 {
-    font-family: 'Proza Libre', sans-serif, Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.title
+{
+    background-color: #44A1A0;
+    color: white;
+    margin: 0px;
+    font-weight: 700;
+    font-size: 45px;
+}
+
+.content
+{
+    display: grid;
+    grid-template-columns: 25% 75%;
+    height: 100%;
+}
+
+.list-menu
+{
+    background-color: #3e4444;
+    color: #fff;
+}
+
+.task-items-container
+{
+    background-color:#deeaee;
+}
+
+.list-object
+{
+    background-color: #151616;
+    padding: 5px;
+    margin: 15px;
+    border-radius: 5px;
+}
+
+.list-object:hover{
+    cursor: pointer;
+}
+
+.task-object
+{
+    text-align: left;
+    padding:5px;
+    margin: 25px;
+    padding-left: 35px;
 }
