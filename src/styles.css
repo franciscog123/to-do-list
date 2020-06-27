@@ -56,12 +56,55 @@ h1,h2,h3,h4,h5
 
 .list-object:hover{
     cursor: pointer;
+    background-color: #878888;
+    color: black;
+    transform: scale(1.05);
 }
 
-.task-object
+.task-container
 {
     text-align: left;
     padding:5px;
-    margin: 25px;
+    margin: 15px;
     padding-left: 35px;
 }
+
+.collapsible-task-button
+{
+    background-color: #eee;
+    color: #444;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    font-size: 18px;
+    border: none;
+    padding: 15px;
+}
+
+.collapsible-task-button:after
+{
+    content: '\02795'; /*unicode for plus(+) sign*/
+    font-size: 13px;
+    float: right;
+    margin-left: 5px;
+}
+
+.active, .collapsible-task-button:hover {
+    background-color: #ccc;
+}
+
+.active:after{
+    content: "\2796"; /* Unicode for "minus" sign (-) */
+}
+
+.task-item-details
+{
+    padding: 0 18px;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+}
+
+
