@@ -33,6 +33,9 @@ h1,h2,h3,h4,h5
     display: grid;
     grid-template-columns: 25% 75%;
     height: 100%;
+    margin-top: 0px;
+    padding-top:0px;
+    border:none;
 }
 
 .list-menu
@@ -44,6 +47,8 @@ h1,h2,h3,h4,h5
 .task-items-container
 {
     background-color:#deeaee;
+    margin-top: 0px;
+    padding-top:0px;
 }
 
 .list-object
@@ -88,7 +93,7 @@ h1,h2,h3,h4,h5
     font-size: 13px;
     float: right;
     margin-left: 5px;
-    color:black;
+    color: black;
 }
 
 .active, .collapsible-task-button:hover {
@@ -108,5 +113,57 @@ h1,h2,h3,h4,h5
     max-height: 0;
     transition: max-height 0.2s ease-out;
 }
+
+.open-menu-span
+{
+    display: none;
+    font-size: x-large;
+    cursor: pointer;
+    background-color: #3e4444;
+    padding:6px;
+    padding-top:10px;
+    height: 5vh;
+}
+
+.closebtn{
+    display:none;
+}
+
+.block{
+    display: block;
+}
+
+.hidden{
+display: none;
+}
+
+@media only screen and (max-width: 600px) {
+    .content{
+        grid-template-columns: 100%;
+        grid-template-rows: 7% 93%;
+        transition:1s ease-in;
+    }
+    .list-menu {
+      display: none;
+    }
+
+    .closebtn
+    {
+        font-size: 40px;
+        color: red;
+        display:block;
+        text-align: left;
+        padding:10px;
+        line-height: 20%;
+    }
+    .open-menu-span{
+        text-align: left;
+        display: inline-block;
+        height: 5vh;
+        padding:6px;
+        padding-top:10px;
+    }
+  }
+
 
 

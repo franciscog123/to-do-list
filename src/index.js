@@ -1,9 +1,11 @@
 import './styles.css';
 
-import {setCollapsibleContent} from './modules/display.js';
+import {setInlineCssListener,setOpenMenuListener, setMenuCloseListener,setCollapsibleContent} from './modules/display.js';
 
-console.log("test");
 
+setMenuCloseListener();
+setOpenMenuListener();
 setCollapsibleContent();
+setInlineCssListener();
 
 
