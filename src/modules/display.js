@@ -68,31 +68,34 @@ function setInlineCssListener() {
 }
 
 /**
- * Sets event listeners to open/close modal.
+ * Sets event listeners to open/close modal(s).
+ * @param {element} modal The parent container that holds the modal content.
+ * @param {element} openBtn The button which will open the modal.
+ * @param {element} span The span container holding the close button.
  */
-function setListModalListeners() {
-  const modal = document.getElementById('new-list-modal');
-  const openBtn = document.querySelector('.new-list-btn');
-  const span = document.querySelector('#close-list-modal');
+function setModalListeners(modal, openBtn, span) {
+  const myModal = modal;
+  const myOpenBtn = openBtn;
+  const mySpan = span;
 
-  openBtn.onclick = () => {
-    modal.style.display = 'block';
+  myOpenBtn.onclick = () => {
+    myModal.style.display = 'block';
   };
 
   // close modal when span(x) clicked
-  span.onclick = () => {
-    modal.style.display = 'none';
+  mySpan.onclick = () => {
+    myModal.style.display = 'none';
   };
 
   // close modal when user clicks outside the modal
-  window.onclick = (event) => {
-    if (event.target === modal) {
-      modal.style.display = 'none';
+  window.addEventListener('click', (event) => {
+    if (event.target === myModal) {
+      myModal.style.display = 'none';
     }
-  };
+  });
 }
 
 export {
   setCollapsibleContent, setInlineCssListener, setMenuCloseListener, setOpenMenuListener,
-  setListModalListeners,
+  setModalListeners,
 };

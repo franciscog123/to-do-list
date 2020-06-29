@@ -15,13 +15,31 @@
                 <span id="close-list-modal" class="close-modal">&times;</span>
                 <br>
                 <form action = "#">
-                    <label for="listName">List Name:</label><br>
-                    <input style = "width: 80%"type="text" id="listName" name="listName" placeholder="New List"><br><br>
+                    <label for="listName" class= "required">List Name:</label><br>
+                    <input style = "width: 80%"type="text" id="listName" name="listName" placeholder="New List" required><br><br>
                     <button type="submit">Submit</button>
-                    <!--<label for="listDescription">List Description:</label><br>
-                    <input type="text" id="listDescription" name="listDescription" placeholder="What's your list about?"><br><br>
+                </form>
+            </div>
+
+        </div>
+
+        <div id="new-task-modal" class ="modal">
+
+            <div id="task-modal-content" class="modal-content">
+                <span id="close-task-modal" class="close-modal">&times;</span>
+                <br>
+                <form action = "#">
+                    <label for="taskName" class= "required">Task Name:</label>
+                    <input type="text" id="taskName" name="taskName" placeholder="New Task" required><br><br>
+                    <label for="taskDescription">Task Description:</label><br>
+                    <textarea style="width: 82%;" id="taskDescription" name="taskDescription" placeholder="What's your task about?"></textarea><br><br>
                     <label for="dueDate">Due Date:</label>
-                    <input type="date" id="dueDate" name="dueDate"><br><br>-->
+                    <input type="date" id="dueDate" name="dueDate"><br><br>
+                    <label for="priority">Priority:</label>
+                    <input style="width: 40%;"type="number" id="priority" name="priority" min="1" max="5"><br><br>
+                    <label for="Notes">Notes:</label><br>
+                    <textarea style="width: 82%;" id="notes" name="notes" placeholder="Anything else you want to add?"></textarea><br><br>
+                    <button type="submit">Submit</button>
                 </form>
             </div>
 
@@ -79,6 +97,13 @@
                         <p>More Details here</p>
                     </div>
                 </div>
+
+                <!--<footer class="footer">
+                    <span>Created by Francisco Guerrero&ensp;</span>
+                    <a href="https://github.com/franciscog123/restaurant-page">
+                    <img border="0" alt="Github Repo" src="./assets/GitHub-Mark-64px.png" width="50" height="50">
+                    </a>
+                </footer>-->
 
                 <div class="float-button-container">
                     <div class="float-button">+</div>    
