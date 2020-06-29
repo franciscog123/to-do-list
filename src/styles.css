@@ -66,6 +66,23 @@ h1,h2,h3,h4,h5
     transform: scale(1.05);
 }
 
+.new-list-btn
+{
+    background-color: #131c25;
+    padding: 5px;
+    margin: 15px;
+    border-radius: 5px;
+    font-family:'Cormorant Garamond', 'serif', Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.new-list-btn:hover{
+    cursor: pointer;
+    transform: scale(1.05);
+    background-color: #0D1319;
+}
+
 .task-container
 {
     text-align: left;
@@ -137,11 +154,90 @@ h1,h2,h3,h4,h5
 display: none;
 }
 
+.float-button-container{
+    position:fixed;
+    width: 60px;
+    height: 60px;
+    bottom:40px;
+    right: 40px;
+    background-color: #0c9;
+    color:white;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: .6;
+}
+
+.float-button-container:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+    box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.2); /*lighten*/
+}
+
+.float-button{
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.modal
+{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /*enable scroll if needed*/
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content{
+    border-radius: 8px;
+    background-color: #deeaee;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+@-webkit-keyframes animatetop{
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1};
+}
+
+@keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+.close-modal
+{
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 600px) {
     .content{
         grid-template-columns: 100%;
         grid-template-rows: 7% 93%;
-        transition:1s ease-in;
     }
     .list-menu {
       display: none;
@@ -150,7 +246,7 @@ display: none;
     .closebtn
     {
         font-size: 40px;
-        color: red;
+        color: white;
         display:block;
         text-align: left;
         padding:10px;
@@ -161,7 +257,6 @@ display: none;
         display: inline-block;
         height: 5vh;
         padding:6px;
-        padding-top:10px;
     }
   }
 

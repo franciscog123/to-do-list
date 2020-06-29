@@ -7,15 +7,35 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
-    <div class="page">    
+    <div class="page">   
+        
+        <div id="new-list-modal" class ="modal">
+
+            <div id="list-modal-content" class="modal-content">
+                <span id="close-list-modal" class="close-modal">&times;</span>
+                <br>
+                <form action = "#">
+                    <label for="listName">List Name:</label><br>
+                    <input style = "width: 80%"type="text" id="listName" name="listName" placeholder="New List"><br><br>
+                    <button type="submit">Submit</button>
+                    <!--<label for="listDescription">List Description:</label><br>
+                    <input type="text" id="listDescription" name="listDescription" placeholder="What's your list about?"><br><br>
+                    <label for="dueDate">Due Date:</label>
+                    <input type="date" id="dueDate" name="dueDate"><br><br>-->
+                </form>
+            </div>
+
+        </div>
+        
         <h1 class="title">To-Do List</h1>
         <div class="content">
-
+            
             <div class="list-menu">
                 <a href="javascript:void(0)" class="closebtn">&times;</a>
                 <h2>Your Lists</h2>
                 <div class="list-object">List1</div>
                 <div class="list-object">List2</div>
+                <div class="new-list-btn">Create List</div>
             </div>
             <div class ="open-menu-span">
                 <span style="display: inline-block; color:white;overflow: hidden;">
@@ -51,6 +71,17 @@
                     <div class="task-item-details">
                         <p>More Details here</p>
                     </div>
+                </div>
+
+                <div class="task-container">
+                    <button type="button" class="collapsible-task-button">Item2</button>
+                    <div class="task-item-details">
+                        <p>More Details here</p>
+                    </div>
+                </div>
+
+                <div class="float-button-container">
+                    <div class="float-button">+</div>    
                 </div>
 
             </div>
