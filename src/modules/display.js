@@ -1,3 +1,5 @@
+import PubSub from 'pubsub-js';
+
 /**
  * Creates a collapsible individual task item.
  */
@@ -19,7 +21,7 @@ function setCollapsibleContent() {
 }
 
 /**
- * Only for mobile screens. Sets the listener for the open button so it opens smoothly.
+ * Only for mobile screens. Sets the listener for the button to open the list menu.
 */
 function setOpenMenuListener() {
   const openBtn = document.querySelector('.open-menu-span');
@@ -32,7 +34,7 @@ function setOpenMenuListener() {
   });
 }
 
-// Only for mobile screens. Sets the listener for the close button so it closes smoothly.
+// Only for mobile screens. Sets the listener for the close list menu button.
 function setMenuCloseListener() {
   const openBtn = document.querySelector('.open-menu-span');
   const contentContainer = document.querySelector('.content');
@@ -95,7 +97,71 @@ function setModalListeners(modal, openBtn, span) {
   });
 }
 
+// TODO - add task array as parameter
+function renderTasks(listIndex) {
+  console.log(`rendering tasks for list index ${listIndex}`);
+  // TODO add logic for rendering Tasks here
+}
+
+/**
+ * Adds a new list button to the page.
+ * @param {string} name The name of the new List to be added.
+ * @param {int} index The index of the new List being added which is set as a data attribute.
+ */
+function createListButton(name, index) {
+  const listContainer = document.querySelector('.list-menu');
+  const newListBtn = document.querySelector('.new-list-btn');
+  const listDiv = document.createElement('div');
+
+  listDiv.classList.add('list-object');
+  listDiv.textContent = name;
+  listDiv.dataset.key = index;
+
+  // this listener gets the clicked list button and toggles the active-list-button class
+  listDiv.addEventListener('click', (e) => {
+    const clicked = e.target;
+    const activeButton = document.querySelector('.active-list-button');
+    if (activeButton) {
+      activeButton.classList.remove('active-list-button');
+    }
+    clicked.classList.add('active-list-button');
+
+    console.log('render tasks');
+    renderTasks(clicked.dataset.key);
+  });
+
+  listContainer.insertBefore(listDiv, newListBtn);
+}
+
+/**
+ * Renders all List buttons.
+ * @param {array} allLists The array of List items to be rendered as buttons.
+ */
+function renderListButtons(allLists) {
+  allLists.forEach((element, index) => {
+    createListButton(element.name, index);
+  });
+}
+
+/**
+ * Takes input for new list form and publishes the input value.
+ * @param {A} index The index of the new List button which will be added as a data attribute.
+ */
+function submitNewList(index) {
+  const listNameInput = document.querySelector('#listNameInput');
+  if (listNameInput.value !== listNameInput.defaultValue || listNameInput.value !== '') {
+    createListButton(listNameInput.value, index);
+
+    // publish the 'Update List Object' topic asynchronously
+    PubSub.publish('Update List Object', listNameInput.value);
+
+    // hide form and inputs
+    listNameInput.value = '';
+    document.querySelector('#new-list-modal').style.display = 'none';
+  }
+}
+
 export {
   setCollapsibleContent, setInlineCssListener, setMenuCloseListener, setOpenMenuListener,
-  setModalListeners,
+  setModalListeners, createListButton, renderListButtons, submitNewList, renderTasks,
 };
