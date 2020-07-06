@@ -28,11 +28,14 @@ function setOpenMenuListener() {
   const openBtn = document.querySelector('.open-menu-span');
   const contentContainer = document.querySelector('.content');
   const listMenu = document.querySelector('.list-menu');
+  const taskContainer=document.querySelector('.task-items-container');
+
   openBtn.addEventListener('click', () => {
     openBtn.style.display = 'none';
     contentContainer.style['ms-grid-rows'] = '100% 0';
     contentContainer.style.gridTemplateRows = '100% 0';
     listMenu.style.display = 'block';
+    taskContainer.style.display='none';
   });
 }
 
@@ -42,12 +45,14 @@ function setMenuCloseListener() {
   const contentContainer = document.querySelector('.content');
   const listMenu = document.querySelector('.list-menu');
   const closeBtn = document.querySelector('.closebtn');
+  const taskContainer=document.querySelector('.task-items-container');
 
   closeBtn.addEventListener('click', () => {
     contentContainer.style['ms-grid-rows'] = '7% 93%';
     contentContainer.style.gridTemplateRows = '7% 93%';
     listMenu.style.display = 'none';
     openBtn.style.display = '';
+    taskContainer.style.display='block';
   });
 }
 

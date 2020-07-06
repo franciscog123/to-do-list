@@ -5,6 +5,7 @@ body,html
     margin: 0;
     padding:0;
     height: 100%;
+    background-color: #deeaee;
 }
 
 h1,h2,h3,h4,h5
@@ -44,6 +45,7 @@ h1,h2,h3,h4,h5
 {
     background-color: #3e4444;
     color: #fff;
+    -ms-grid-column: 1;
 }
 
 .task-items-container
@@ -251,6 +253,7 @@ display: none;
   cursor: pointer;
 }
 
+
 @media only screen and (max-width: 800px) {
     #new-task-modal{
           top:5%;
@@ -258,15 +261,22 @@ display: none;
       }
   }  
 
+  @media only screen and (min-width: 601px) {
+    .task-items-container{
+        -ms-grid-column: 2;
+    }
+}
+
 @media only screen and (max-width: 600px) {
     .content{
         -ms-grid-columns: 100%;
         grid-template-columns: 100%;
-        -ms-grid-rows: 7% 93%;
+        /* -ms-grid-rows: 7% 93%; */
         grid-template-rows: 7% 93%;
     }
     .list-menu {
       display: none;
+      -ms-grid-row: 1;
     }
 
     .closebtn
@@ -284,11 +294,16 @@ display: none;
         display: inline-block;
         height: 5vh;
         padding:6px;
+        -ms-grid-row: 1;
     }
     
     #new-task-modal{
         top:0;
         height: 100%;
+    }
+
+    .task-items-container{
+        -ms-grid-row: 2;
     }
   }
 
