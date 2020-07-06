@@ -1,4 +1,5 @@
 import PubSub from 'pubsub-js';
+import 'core-js';
 
 /**
  * Creates a collapsible individual task item.
@@ -29,6 +30,7 @@ function setOpenMenuListener() {
   const listMenu = document.querySelector('.list-menu');
   openBtn.addEventListener('click', () => {
     openBtn.style.display = 'none';
+    contentContainer.style['ms-grid-rows'] = '100% 0';
     contentContainer.style.gridTemplateRows = '100% 0';
     listMenu.style.display = 'block';
   });
@@ -42,6 +44,7 @@ function setMenuCloseListener() {
   const closeBtn = document.querySelector('.closebtn');
 
   closeBtn.addEventListener('click', () => {
+    contentContainer.style['ms-grid-rows'] = '7% 93%';
     contentContainer.style.gridTemplateRows = '7% 93%';
     listMenu.style.display = 'none';
     openBtn.style.display = '';

@@ -1,6 +1,7 @@
 import './styles.css';
 import { format } from 'date-fns';
 import PubSub from 'pubsub-js';
+import 'core-js';
 import Task from './modules/task.js';
 import List from './modules/list.js';
 import {
