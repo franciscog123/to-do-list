@@ -28,14 +28,14 @@ function setOpenMenuListener() {
   const openBtn = document.querySelector('.open-menu-span');
   const contentContainer = document.querySelector('.content');
   const listMenu = document.querySelector('.list-menu');
-  const taskContainer=document.querySelector('.task-items-container');
+  const taskContainer = document.querySelector('.task-items-container');
 
   openBtn.addEventListener('click', () => {
     openBtn.style.display = 'none';
     contentContainer.style['ms-grid-rows'] = '100% 0';
     contentContainer.style.gridTemplateRows = '100% 0';
     listMenu.style.display = 'block';
-    taskContainer.style.display='none';
+    taskContainer.style.display = 'none';
   });
 }
 
@@ -45,14 +45,14 @@ function setMenuCloseListener() {
   const contentContainer = document.querySelector('.content');
   const listMenu = document.querySelector('.list-menu');
   const closeBtn = document.querySelector('.closebtn');
-  const taskContainer=document.querySelector('.task-items-container');
+  const taskContainer = document.querySelector('.task-items-container');
 
   closeBtn.addEventListener('click', () => {
     contentContainer.style['ms-grid-rows'] = '7% 93%';
     contentContainer.style.gridTemplateRows = '7% 93%';
     listMenu.style.display = 'none';
     openBtn.style.display = '';
-    taskContainer.style.display='block';
+    taskContainer.style.display = 'block';
   });
 }
 
@@ -105,10 +105,58 @@ function setModalListeners(modal, openBtn, span) {
   });
 }
 
-// TODO - add task array as parameter
-function renderTasks(listIndex) {
-  console.log(`rendering tasks for list index ${listIndex}`);
-  // TODO add logic for rendering Tasks here
+function createTaskContainer(task, index) {
+  const container = document.querySelector('.task-items-container');
+
+  const taskContainer = document.createElement('div');
+  taskContainer.classList.add('task-container');
+  container.appendChild(taskContainer);
+
+  const icon = document.createElement('span');
+  icon.classList.add('material-icons', 'color');
+  icon.textContent = 'check_circle_outline';
+  icon.setAttribute('data-key', index);
+  taskContainer.appendChild(icon);
+
+  const buttonWrapper = document.createElement('div');
+  buttonWrapper.classList.add('task-buttons-wrapper');
+  taskContainer.appendChild(buttonWrapper);
+
+  const taskButton = document.createElement('button');
+  taskButton.classList.add('collapsible-task-button');
+  taskButton.textContent = task.title;
+  buttonWrapper.appendChild(taskButton);
+
+  const itemDetails = document.createElement('div');
+  itemDetails.classList.add('task-item-details');
+  buttonWrapper.appendChild(itemDetails);
+
+  const paraWrapper = document.createElement('div');
+  paraWrapper.classList.add('para-wrapper');
+  itemDetails.appendChild(paraWrapper);
+
+  const leftPara = document.createElement('div');
+  leftPara.classList.add('left-para');
+  paraWrapper.appendChild(leftPara);
+
+  const rightPara = document.createElement('div');
+  rightPara.classList.add('right-para');
+  rightPara.textContent = task.dueDate;
+  paraWrapper.appendChild(rightPara);
+
+  const descriptionPara = document.createElement('p');
+  descriptionPara.textContent = task.priority;
+  itemDetails.appendChild(descriptionPara);
+
+  const notesPara = document.createElement('p');
+  notesPara.textContent = task.notes;
+  itemDetails.appendChild(notesPara);
+}
+
+function renderTasks(tasks) {
+  tasks.forEach((element, index) => {
+    createTaskContainer(element, index);
+  });
 }
 
 /**
@@ -134,8 +182,9 @@ function createListButton(name, index) {
     }
     clicked.classList.add('active-list-button');
 
-    console.log('render tasks');
-    renderTasks(clicked.dataset.key);
+    console.log(`render tasks ${clicked.dataset.key}`);
+    // TODO fix bug when rendering additional tasks
+    PubSub.publish('Render Tasks', clicked.dataset.key);
   });
 
   listContainer.insertBefore(listDiv, newListBtn);
@@ -172,4 +221,5 @@ function submitNewList(index) {
 export {
   setCollapsibleContent, setInlineCssListener, setMenuCloseListener, setOpenMenuListener,
   setModalListeners, createListButton, renderListButtons, submitNewList, renderTasks,
+  createTaskContainer,
 };

@@ -29,6 +29,19 @@ module.exports = {
           'css-loader',
         ],
       },
+      {
+        test: /\.(png|svg|jpg|gif)$/i,
+        use: [
+          'file-loader?name=[name].[ext]',
+          {
+            loader: 'image-webpack-loader',
+            options: {
+              bypassOnDebug: false,
+              disable: false,
+            },
+          },
+        ],
+      },
     ],
   },
 };

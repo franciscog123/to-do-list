@@ -1,11 +1,12 @@
 import './styles.css';
 import { format } from 'date-fns';
 import PubSub from 'pubsub-js';
+import myImage from './assets/GitHub-Mark-Light-32px.png';
 import 'core-js';
 import Task from './modules/task.js';
 import List from './modules/list.js';
 import {
-  setInlineCssListener, setOpenMenuListener, submitNewList,
+  setInlineCssListener, setOpenMenuListener, submitNewList, renderTasks,
   setMenuCloseListener, setCollapsibleContent, setModalListeners, renderListButtons,
 } from './modules/display.js';
 
@@ -38,6 +39,19 @@ PubSub.subscribe('Update List Object', myListSubscriber);
 
 // Global variable for testing. REMOVE LATER
 window.allLists = allLists;
+
+renderTasks(list1.tasks);
+
+// create a function to subscribe to topics
+// render tasks for specific list when list button clicked
+const myTaskButtonSubscriber = (msg, data) => {
+  console.log(msg);
+  renderTasks(allLists[data].tasks);
+};
+
+// add function to list of subscribers for particular topic
+// When 'Render Tasks' topic is fired, our subscriber function is called
+PubSub.subscribe('Render Tasks', myTaskButtonSubscriber);
 
 // set event listener for new list button
 document.querySelector('#newListBtn').addEventListener('click', () => {
