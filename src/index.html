@@ -30,7 +30,7 @@
             <div id="task-modal-content" class="modal-content">
                 <span id="close-task-modal" class="close-modal">&times;</span>
                 <br>
-                <form action = "#">
+                <form action = "#" onsubmit="return false">
                     <label for="taskName" class= "required">Task Name:</label>
                     <input type="text" id="taskName" name="taskName" placeholder="New Task" required><br><br>
                     <label for="taskDescription">Task Description:</label><br>
@@ -41,7 +41,7 @@
                     <input style="width: 40%;"type="number" id="priority" name="priority" min="1" max="5"><br><br>
                     <label for="Notes">Notes:</label><br>
                     <textarea style="width: 82%;" id="notes" name="notes" placeholder="Anything else you want to add?"></textarea><br><br>
-                    <button type="submit">Submit</button>
+                    <button id="task-submit-btn" type="submit">Submit</button>
                 </form>
             </div>
 

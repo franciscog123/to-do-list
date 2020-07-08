@@ -1,5 +1,20 @@
 import PubSub from 'pubsub-js';
 import 'core-js';
+import Task from './task.js';
+
+/**
+ * Collapses the next sibling element of the clicked element.
+ * @param {*} event The event passed in when element clicked.
+ */
+function collapse(event) {
+  event.target.classList.toggle('active');
+  const taskDetails = event.target.nextElementSibling;
+  if (taskDetails.style.maxHeight) {
+    taskDetails.style.maxHeight = null;
+  } else {
+    taskDetails.style.maxHeight = `${taskDetails.scrollHeight}px`;
+  }
+}
 
 /**
  * Sets the listeners on all task items so that they are collapsible when clicked.
@@ -8,17 +23,18 @@ function setCollapsibleContent() {
   const taskButtons = Array.from(document.getElementsByClassName('collapsible-task-button'));
 
   for (let i = 0; i < taskButtons.length; i += 1) {
-    // eslint-disable-next-line func-names
-    taskButtons[i].addEventListener('click', function () {
-      this.classList.toggle('active');
-      const taskDetails = this.nextElementSibling;
-      if (taskDetails.style.maxHeight) {
-        taskDetails.style.maxHeight = null;
-      } else {
-        taskDetails.style.maxHeight = `${taskDetails.scrollHeight}px`;
-      }
-    });
+    taskButtons[i].addEventListener('click', collapse);
   }
+}
+
+/**
+ * Deletes the parent elelement of the clicked element. Publishes the deleted task as a topic.
+ * @param {element} event The event passed in when the element is clicked.
+ */
+function deleteParent(event) {
+  const activeListIndex = document.querySelector('.active-list-button').dataset.key;
+  event.target.parentElement.remove();
+  PubSub.publish('Delete Task', [event.target.dataset.key, activeListIndex]);
 }
 
 /**
@@ -29,12 +45,9 @@ function setDeleteTaskListeners() {
   const deleteButtons = Array.from(document.getElementsByClassName('material-icons'));
 
   if (deleteButtons) {
-    const activeListIndex = document.querySelector('.active-list-button').dataset.key;
+    // const activeListIndex = document.querySelector('.active-list-button').dataset.key;
     deleteButtons.forEach((element) => {
-      element.addEventListener('click', (event) => {
-        event.target.parentElement.remove();
-        PubSub.publish('Delete Task', [event.target.dataset.key, activeListIndex]);
-      });
+      element.addEventListener('click', deleteParent);
     });
   }
 }
@@ -124,7 +137,7 @@ function setModalListeners(modal, openBtn, span) {
 }
 
 /**
- * Creates a single collapsible task item with the task info passed in.
+ * Creates a single task item with the task info passed in.
  * @param {*} task The task that will be displayed.
  * @param {*} index The index of the task, added as a data attribute for tracking.
  */
@@ -177,6 +190,11 @@ function createTaskContainer(task, index) {
   itemDetails.appendChild(notesPara);
 }
 
+/**
+ * Renders all task containers to the DOM for a single list.
+ * @param {array} tasks The array of tasks
+ * @param {boolean} isInitial Flag indicating whether it is the initial page load
+ */
 function renderTasks(tasks, isInitial) {
   let activeList = document.querySelector('.active-list-button');
 
@@ -201,6 +219,7 @@ function renderTasks(tasks, isInitial) {
   }
   setCollapsibleContent();
   setDeleteTaskListeners();
+  document.querySelector('#title').textContent = activeList.textContent;
 }
 
 /**
@@ -226,8 +245,6 @@ function createListButton(name, index) {
     }
     clicked.classList.add('active-list-button');
 
-    console.log(`render tasks ${clicked.dataset.key}`);
-    // TODO fix bug when rendering additional tasks
     PubSub.publish('Render Tasks', clicked.dataset.key);
   });
 
@@ -262,8 +279,68 @@ function submitNewList(index) {
   }
 }
 
+/**
+ * Takes input from new task form, renders it to the DOM, and published the input data as a topic.
+ */
+function submitTaskInput() {
+  const task = new Task('');
+  const nameInput = document.querySelector('#taskName');
+  const descInput = document.querySelector('#taskDescription');
+  const dateInput = document.querySelector('#dueDate');
+  const priority = document.querySelector('#priority');
+  const notes = document.querySelector('#notes');
+  let canSubmit = false;
+  const taskList = document.querySelectorAll('.task-container');
+  let index;
+  if (taskList) {
+    index = Array.from(taskList).length;
+  } else { index = 0; }
+
+  if (descInput.value !== descInput.defaultValue || descInput.value !== '') {
+    task.description = descInput.value;
+  } else {
+    task.description = '';
+  }
+  if (dateInput.value !== dateInput.defaultValue || !dateInput.value) {
+    task.dueDate = dateInput.value;
+  } else {
+    task.dueDate = '';
+  }
+  if (priority.value !== priority.defaultValue || priority.value !== '') {
+    if (priority.value >= 1 && priority.value <= 5) {
+      task.priority = priority.value;
+      canSubmit = true;
+    }
+  } else {
+    task.priority = '';
+    canSubmit = true;
+  }
+  if (notes.value !== notes.defaultValue || notes.value !== '') {
+    task.notes = notes.value;
+  } else {
+    task.notes = '';
+  }
+  if (nameInput.value !== nameInput.defaultValue || nameInput.value !== '') {
+    task.title = nameInput.value;
+  } else { canSubmit = false; }
+
+  if (canSubmit) {
+    PubSub.publish('Create New Task', task);
+
+    nameInput.value = '';
+    descInput.value = '';
+    dateInput.value = '';
+    priority.value = '';
+    notes.value = '';
+    document.querySelector('#new-task-modal').style.display = 'none';
+    createTaskContainer(task, index);
+    setCollapsibleContent();
+    setDeleteTaskListeners();
+  }
+}
+
 export {
   setCollapsibleContent, setInlineCssListener, setMenuCloseListener, setOpenMenuListener,
   setModalListeners, createListButton, renderListButtons, submitNewList, renderTasks,
-  createTaskContainer,
+  createTaskContainer, submitTaskInput,
 };

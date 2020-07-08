@@ -7,7 +7,7 @@ import Task from './modules/task.js';
 import List from './modules/list.js';
 import {
   setInlineCssListener, setOpenMenuListener, submitNewList, renderTasks,
-  setMenuCloseListener, setModalListeners, renderListButtons,
+  setMenuCloseListener, setModalListeners, renderListButtons, submitTaskInput,
 } from './modules/display.js';
 
 const task1 = new Task('Task1', 'Description fkf', format(new Date(2001, 1, 3), 'yyyy-MM-dd'), 1, 'no notes');
@@ -35,6 +35,18 @@ const myListSubscriber = (msg, data) => {
 // add function to list of subscribers for particular topic
 // When 'Update List Object' topic is fired, our subscriber function is called
 PubSub.subscribe('Update List Object', myListSubscriber);
+
+// create a function to subscribe to topics
+// adds a new Task object to corresponding List array
+const myNewTaskSubscriber = (msg, data) => {
+  console.log(msg);
+  const listIndex = document.querySelector('.active-list-button').dataset.key;
+  allLists[listIndex].addTask(data);
+};
+
+// add function to list of subscribers for particular topic
+// When 'Create New Task' topic is fired, our subscriber function is called
+PubSub.subscribe('Create New Task', myNewTaskSubscriber);
 
 // Global variable for testing. REMOVE LATER
 window.allLists = allLists;
@@ -72,6 +84,11 @@ PubSub.subscribe('Delete Task', taskDeleteSubscriber);
 // set event listener for new list button
 document.querySelector('#newListBtn').addEventListener('click', () => {
   submitNewList(allLists.length);
+});
+
+// set event listener for new task button
+document.querySelector('#task-submit-btn').addEventListener('click', () => {
+  submitTaskInput();
 });
 
 // set listeners for the new list modal (new list popup form)
