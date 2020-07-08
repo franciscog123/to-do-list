@@ -7,7 +7,7 @@ import Task from './modules/task.js';
 import List from './modules/list.js';
 import {
   setInlineCssListener, setOpenMenuListener, submitNewList, renderTasks,
-  setMenuCloseListener, setCollapsibleContent, setModalListeners, renderListButtons,
+  setMenuCloseListener, setModalListeners, renderListButtons,
 } from './modules/display.js';
 
 const task1 = new Task('Task1', 'Description fkf', format(new Date(2001, 1, 3), 'yyyy-MM-dd'), 1, 'no notes');
@@ -19,8 +19,7 @@ const list1 = new List('Test1', ray);
 const list2 = new List('Test2');
 
 list1.addTask(task3);
-list1.removeTask(1);
-
+list2.addTask(task1);
 const allLists = [list1, list2];
 
 // render all Lists to DOM from allLists array
@@ -40,18 +39,35 @@ PubSub.subscribe('Update List Object', myListSubscriber);
 // Global variable for testing. REMOVE LATER
 window.allLists = allLists;
 
-renderTasks(list1.tasks);
+// initial render of tasks in UI
+renderTasks(list1.tasks, true);
 
 // create a function to subscribe to topics
-// render tasks for specific list when list button clicked
+// render all tasks for specific list when list button clicked
 const myTaskButtonSubscriber = (msg, data) => {
   console.log(msg);
-  renderTasks(allLists[data].tasks);
+  renderTasks(allLists[data].tasks, false);
 };
 
 // add function to list of subscribers for particular topic
 // When 'Render Tasks' topic is fired, our subscriber function is called
 PubSub.subscribe('Render Tasks', myTaskButtonSubscriber);
+
+// create a function to subscribe to topics
+// deletes a single task from allLists array
+const taskDeleteSubscriber = (msg, data) => {
+  const buttonIndex = data[0];
+  const listIndex = data[1];
+  console.log(msg);
+  console.log(`buttonIndex: ${buttonIndex}
+  listIndex: ${listIndex}`);
+  allLists[listIndex].tasks.splice(buttonIndex, 1);
+  renderTasks(allLists[listIndex].tasks, false);
+};
+
+// add function to list of subscribers for particular topic
+// When 'Delete Task' topic is fired, our subscriber function is called
+PubSub.subscribe('Delete Task', taskDeleteSubscriber);
 
 // set event listener for new list button
 document.querySelector('#newListBtn').addEventListener('click', () => {
@@ -73,5 +89,4 @@ setModalListeners(taskModal, taskOpenBtn, taskSpan);
 // set listeners for responsive UI elements
 setMenuCloseListener();
 setOpenMenuListener();
-setCollapsibleContent();
 setInlineCssListener();

@@ -2,7 +2,7 @@ import PubSub from 'pubsub-js';
 import 'core-js';
 
 /**
- * Creates a collapsible individual task item.
+ * Sets the listeners on all task items so that they are collapsible when clicked.
  */
 function setCollapsibleContent() {
   const taskButtons = Array.from(document.getElementsByClassName('collapsible-task-button'));
@@ -17,6 +17,24 @@ function setCollapsibleContent() {
       } else {
         taskDetails.style.maxHeight = `${taskDetails.scrollHeight}px`;
       }
+    });
+  }
+}
+
+/**
+ * Sets the listeners on all delete buttons to remove the associated tasks containers.
+ * Publishes topic 'Delete Task' to app logic.
+ */
+function setDeleteTaskListeners() {
+  const deleteButtons = Array.from(document.getElementsByClassName('material-icons'));
+
+  if (deleteButtons) {
+    const activeListIndex = document.querySelector('.active-list-button').dataset.key;
+    deleteButtons.forEach((element) => {
+      element.addEventListener('click', (event) => {
+        event.target.parentElement.remove();
+        PubSub.publish('Delete Task', [event.target.dataset.key, activeListIndex]);
+      });
     });
   }
 }
@@ -105,6 +123,11 @@ function setModalListeners(modal, openBtn, span) {
   });
 }
 
+/**
+ * Creates a single collapsible task item with the task info passed in.
+ * @param {*} task The task that will be displayed.
+ * @param {*} index The index of the task, added as a data attribute for tracking.
+ */
 function createTaskContainer(task, index) {
   const container = document.querySelector('.task-items-container');
 
@@ -137,26 +160,47 @@ function createTaskContainer(task, index) {
 
   const leftPara = document.createElement('div');
   leftPara.classList.add('left-para');
+  leftPara.textContent = `Priority: ${task.priority}`;
   paraWrapper.appendChild(leftPara);
 
   const rightPara = document.createElement('div');
   rightPara.classList.add('right-para');
-  rightPara.textContent = task.dueDate;
+  rightPara.textContent = `Due Date: ${task.dueDate}`;
   paraWrapper.appendChild(rightPara);
 
   const descriptionPara = document.createElement('p');
-  descriptionPara.textContent = task.priority;
+  descriptionPara.textContent = `Description: ${task.description}`;
   itemDetails.appendChild(descriptionPara);
 
   const notesPara = document.createElement('p');
-  notesPara.textContent = task.notes;
+  notesPara.textContent = `Notes: ${task.notes}`;
   itemDetails.appendChild(notesPara);
 }
 
-function renderTasks(tasks) {
-  tasks.forEach((element, index) => {
-    createTaskContainer(element, index);
-  });
+function renderTasks(tasks, isInitial) {
+  let activeList = document.querySelector('.active-list-button');
+
+  // on initial page load load all tasks for first list and set list button as active
+  if (isInitial) {
+    tasks.forEach((element, index) => {
+      createTaskContainer(element, index);
+    });
+    activeList = document.querySelector('.list-object');
+    activeList.classList.add('active-list-button');
+  } else if (activeList) {
+  // remove current task elements from DOM
+    const currentTasks = Array.from(document.querySelectorAll('.task-container'));
+    currentTasks.forEach((element) => {
+      element.remove();
+    });
+
+    // create new task elements
+    tasks.forEach((element, index) => {
+      createTaskContainer(element, index);
+    });
+  }
+  setCollapsibleContent();
+  setDeleteTaskListeners();
 }
 
 /**
