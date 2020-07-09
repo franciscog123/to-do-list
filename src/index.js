@@ -10,17 +10,40 @@ import {
   setMenuCloseListener, setModalListeners, renderListButtons, submitTaskInput,
 } from './modules/display.js';
 
-const task1 = new Task('Task1', 'Description fkf', format(new Date(2001, 1, 3), 'yyyy-MM-dd'), 1, 'no notes');
-const task2 = new Task('Task2', 'Description dddd', format(new Date(2020, 3, 5), 'yyyy-MM-dd'), 1, 'still no notes');
-const task3 = new Task('Task3', 'Description 333', format(new Date(2020, 6, 10), 'yyyy-MM-dd'), 2, 'no notes');
-const ray = [task1, task2];
+let allLists = [];
 
-const list1 = new List('Test1', ray);
-const list2 = new List('Test2');
+// retrieve data from local storage
+allLists = JSON.parse(localStorage.getItem('allLists'));
 
-list1.addTask(task3);
-list2.addTask(task1);
-const allLists = [list1, list2];
+// saves data from allLists array to localStorage as JSON
+function saveToStorage() {
+  localStorage.setItem('allLists', JSON.stringify(allLists));
+}
+
+// adding lists and tasks if there are none in localStorage
+if (allLists == null || allLists.length === 0) {
+  const task1 = new Task('Sample Task', 'Description of the task goes here.',
+    format(new Date(2001, 1, 3), 'yyyy-MM-dd'), 1, 'Adding detailed notes for my task. Click the check mark on the left to remove this completed task.');
+  const list1 = new List('Sample List');
+  list1.addTask(task1);
+  allLists = [list1];
+  saveToStorage();
+}
+
+/* Remapping allLists array as a new List object. When the array is retrieved from localStorage,
+ the prototype is lost since Json.parse only converts a JSON string into a regular javascript
+ object. The prototype methods can't be called without this workaround. */
+allLists.forEach((item, index, arr) => {
+  const listRay = arr;
+  listRay[index] = new List(listRay[index].name, listRay[index].tasks);
+
+  // remap tasks array within each list object as a new task object.
+  listRay[index].tasks.forEach((item2, index2, arr2) => {
+    const newTask = arr2;
+    newTask[index2] = new Task(newTask[index2].title, newTask[index2].description,
+      newTask[index2].dueDate, newTask[index2].priority, newTask[index2].notes);
+  });
+});
 
 // render all Lists to DOM from allLists array
 renderListButtons(allLists, allLists.length);
@@ -28,8 +51,8 @@ renderListButtons(allLists, allLists.length);
 // create a function to subscribe to topics
 // adds a new list object to AllLists array
 const myListSubscriber = (msg, data) => {
-  console.log(msg);
   allLists.push(new List(data));
+  saveToStorage();
 };
 
 // add function to list of subscribers for particular topic
@@ -39,25 +62,24 @@ PubSub.subscribe('Update List Object', myListSubscriber);
 // create a function to subscribe to topics
 // adds a new Task object to corresponding List array
 const myNewTaskSubscriber = (msg, data) => {
-  console.log(msg);
   const listIndex = document.querySelector('.active-list-button').dataset.key;
   allLists[listIndex].addTask(data);
+  saveToStorage();
 };
 
 // add function to list of subscribers for particular topic
 // When 'Create New Task' topic is fired, our subscriber function is called
 PubSub.subscribe('Create New Task', myNewTaskSubscriber);
 
-// Global variable for testing. REMOVE LATER
+// Global variable for testing.
 window.allLists = allLists;
 
 // initial render of tasks in UI
-renderTasks(list1.tasks, true);
+renderTasks(allLists[0].tasks, true);
 
 // create a function to subscribe to topics
 // render all tasks for specific list when list button clicked
 const myTaskButtonSubscriber = (msg, data) => {
-  console.log(msg);
   renderTasks(allLists[data].tasks, false);
 };
 
@@ -70,11 +92,9 @@ PubSub.subscribe('Render Tasks', myTaskButtonSubscriber);
 const taskDeleteSubscriber = (msg, data) => {
   const buttonIndex = data[0];
   const listIndex = data[1];
-  console.log(msg);
-  console.log(`buttonIndex: ${buttonIndex}
-  listIndex: ${listIndex}`);
   allLists[listIndex].tasks.splice(buttonIndex, 1);
   renderTasks(allLists[listIndex].tasks, false);
+  saveToStorage();
 };
 
 // add function to list of subscribers for particular topic
