@@ -33,7 +33,8 @@ function setCollapsibleContent() {
  */
 function deleteParent(event) {
   const activeListIndex = document.querySelector('.active-list-button').dataset.key;
-  event.target.parentElement.remove();
+  //event.target.parentElement.remove(); below line does same as this. IE 11 workaround
+  event.target.parentElement.parentNode.removeChild(event.target.parentElement);
   PubSub.publish('Delete Task', [event.target.dataset.key, activeListIndex]);
 }
 
@@ -209,7 +210,8 @@ function renderTasks(tasks, isInitial) {
   // remove current task elements from DOM
     const currentTasks = Array.from(document.querySelectorAll('.task-container'));
     currentTasks.forEach((element) => {
-      element.remove();
+      //element.remove(); below line does same as this. IE11 workaround
+      element.parentNode.removeChild(element);
     });
 
     // create new task elements
